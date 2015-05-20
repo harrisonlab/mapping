@@ -47,19 +47,22 @@ for f in *.loc; do tail  -n +7 $f | head -n -183; done >../merged.locus
 perl -ne '/AX/ && print' merged.locus | wc -l
 
 
+Format the loc file to remove 80 char issue
 ```
 ./loc_formatter.pl ./em_fe/merged.locus ./em_fe/formatted.loc
 ```
 
+Insert the gaps, based on the missing data
 ```
 ./gap_inserter.pl ./em_fe/formatted.loc ./em_fe/em_fe_numbers.txt ./em_fe/output.loc
 ```
 
-eg:
+Sort the map by cM position
 ```
 ./map_sorter.pl ./em_fe/exf_processed.map  ./em_fe/exf_sorted.map 
 ```
-eg:
+
+Format the map in joinmap format
 ```
 ./map_formatter.pl ./em_fe/exf_sorted.map ./em_fe/exf_joinmap
 ```
