@@ -4,6 +4,7 @@ use warnings;
 use strict;
 
 my $input_file=shift;
+my $output_name=shift;
 my @loc_data= read_table(\$input_file); 	
 
 print "parsing loc file\n";
@@ -18,13 +19,13 @@ my %parsed_loc=parse_loc(\@loc_data);
 #exit;
 
 print "Marker Output \n";
-output_marker(\%parsed_loc, 'formatted_ssr');
+output_marker(\%parsed_loc, $output_name);
  
 sub output_marker{
 
 my ($combined,$name,)=@_;
 my %combined_marker=%{$combined};
-my $loc_name=$name.'.loc'; 
+my $loc_name=$name; 
 my $num=scalar (keys %combined_marker);
 
   open(OUT,">$loc_name");
@@ -39,14 +40,12 @@ my $num=scalar (keys %combined_marker);
        
        foreach my $val (keys %combined_marker){	
 			chomp $val;
-			print OUT $val;
+			print OUT $val."\r\n";
 		#	print $val."\n";
 			
 		#	my @split_marker=split(' ' ,$combined_marker{$val});
-		#	for (my $i=0; $i<188;$i++){
-				
-                
-					print OUT $combined_marker{$val};
+		#	for (my $i=0; $i<188;$i++){         
+			print OUT $combined_marker{$val}."\r\n";
 				
 		#	}
          #  print OUT "\r\n";
@@ -56,28 +55,30 @@ my $num=scalar (keys %combined_marker);
 }
 sub parse_loc{
 my($multiplex_data)=@_;
-my $start=7;
+my $start=0;
 my %loc_hash;
 my $name=();
 my $loc=();
 for (my $i=$start;$i<scalar(@$multiplex_data);$i++){
 			
-		if (@$multiplex_data[$i] =~/\;/ && $i==$start){
-				
+		if (@$multiplex_data[$i] =~/AX/ && $i==$start){
+				#print "HERE\n";
 				chomp @$multiplex_data[$i];
-				$name=@$multiplex_data[$i];
+				@$multiplex_data[$i]=~s/\r//g;
+				$name=@$multiplex_data[$i];	
 				
 		}
-		elsif (@$multiplex_data[$i] =~/\;/ && $i>$start){
+		elsif (@$multiplex_data[$i] =~/AX/ && $i>$start){
+				#print "HERE\n";
 				$loc_hash{$name}=$loc;
 				$loc=();
 				chomp @$multiplex_data[$i];
 				$name=@$multiplex_data[$i];
-				}
-				 
-			 
+				}	 
 		else{
+			#print "HERE\n";
 			chomp @$multiplex_data[$i];
+			@$multiplex_data[$i]=~s/\r//g;
 			$loc=$loc.@$multiplex_data[$i];
 			}
 
