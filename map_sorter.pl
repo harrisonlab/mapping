@@ -3,28 +3,27 @@
 use warnings;
 use strict;
 
-#Usage ./map_reader.pl combined_map.txt groups.txt hxk_map.txt
+#Usage ./map_sorter.pl ./em_fe/exf_processed.map  ./em_fe/exf_sorted.map 
 # your map, probe set mapping, map to compare with
 
 
 my $input_map=shift;
-my $collapsed_group=shift;
-my $compare_map=shift;
+my $output_map=shift;
+my @map_data= read_table(\$input_map); 	
+my @ordered_map=();
+my $count=0;
+my %map=parse_map(\@map_data,\@ordered_map,\$count);
 
-my @loc_data= read_table(\$input_map); 	
-my %hash_of_map=parse_map(\@loc_data);
-my @group_data= read_table(\$collapsed_group); 	
-my %hash_of_group=parse_group(\@group_data);
-my @comp_data= read_table(\$compare_map); 	
+open(OUT1,">$output_map");
 
-#foreach(keys %hash_of_map){
-#	print "Linkage ".$_;
-#	my @lg_array=@{$hash_of_map{$_}};
-#	print @lg_array;
-#	#foreach (@lg_array){
-#	#	print $_;
-#	#}
-#	}
+foreach( @ordered_map){
+	#print "Linkage ".$_."\n";
+	my @lg_array=@{$map{$_}};
+	my @sorted_lg=sort_lg(\@lg_array);
+		foreach (@sorted_lg){
+			print OUT1 $_."\n";
+		}
+	}
 
 #foreach(keys %hash_of_group){
 #	print $_."\t";
@@ -36,50 +35,24 @@ my @comp_data= read_table(\$compare_map);
 #	}
 
 #THIS COMPARES THE MAPS LOOKING FOR MATCHING LOCI
-print "Comparing maps \n";
-	foreach(@comp_data){
-		my @marker=split('\t',$_);
-		#print "Searching for $marker[0] found on $marker[1] \n";
-		#print "$marker[1] \t";
-			foreach my $group (@group_data){
-				my @collapsed_markers= split(' ',$group);
-					foreach my $collapsed (@collapsed_markers){
-						#print $collapsed;
-						if ($collapsed=~/$marker[0]/){
-							my $marker_lg=search_map(\@marker,\$collapsed_markers[0],\%hash_of_map);
-						}
-					}
-				}
-	}
+#print "Comparing maps \n";
+#	foreach(@comp_data){
+#		my @marker=split('\t',$_);
+#		#print "Searching for $marker[0] found on $marker[1] \n";
+#		#print "$marker[1] \t";
+#			foreach my $group (@group_data){
+#				my @collapsed_markers= split(' ',$group);
+#					foreach my $collapsed (@collapsed_markers){
+#						#print $collapsed;
+#						if ($collapsed=~/$marker[0]/){
+#							my $marker_lg=search_map(\@marker,\$collapsed_markers[0],\%hash_of_map);
+#						}
+#					}
+#				}
+#	}
 
 #ONCE A MATCH HAS BEEN FOUND THIS PRINTS OUT THE POSITION IN THE TWO MAPS BEING COMPARED
 
-sub search_map{
-my($marker,$locus,$map)=@_;
-#print "Searching for $$locus \n";
-open(OUT1,">>emxfe_processed.map");
-open(OUT2,">>hxk_processed.map");
- 
-my %map=%{$map};
-#chomp @$marker[2];
-#print @$marker[1]."\t".@$marker[2]."\t";
-	foreach my $lgs (keys %map){
-		my @lg=@{$map{$lgs}};
-			foreach my $grp (@lg){
-					my @split_loc=split(" ",$grp);
-					if ($$locus=~/$split_loc[0]/){
-						$lgs=~s/\r\n//;
-						#print "$lgs,$$locus,$split_loc[1],";
-						#print "$$marker[1],$$marker[0],$$marker[2]\n";
-						#print OUT1 "$lgs,$$locus,$split_loc[1]\n";
-						print OUT1 "$lgs,$$marker[0],$split_loc[1]\n";
-						print OUT2 "$$marker[1],$$marker[0],$$marker[2]";
-					}
-				}
-		}
-	close OUT1;
-	close OUT2;
-}
 sub read_table{
     my ($file)=@_;
     
@@ -90,46 +63,69 @@ sub read_table{
     return @array;
 }
 sub parse_map{
-	my($file)=@_;
+	my($map,$order,$count)=@_;
 	my %HoA=();
 	my $key=();
 	my @array=();
 	my $flag=0;
+	print "ARRAY LENGTH ".scalar(@$map)." \n";
 	
-	foreach(@$file){
-		if($_=~/group/ && $flag==0){
-			$key=$_;
-			$flag=1;
-			}
-		elsif($_=~/group/ && $flag==1){
-			#print "$key \t $_";
-			$HoA{$key}=[@array];
-			$key=$_;
+	for(my $i=0;$i<scalar(@$map);$i++){
+		@$map[$i]=~s/\n//g;
+		my @split=split(',',@$map[$i]);
+		#print $split[0]."\n";
+		
+		if ($i==0){
+	#		print "FIRST LINE\n";
+			$flag=$split[0];
+			push (@$order,$flag);
+			#push (@array,@$map[$i]);
+			$$count=$$count+1;
+		}
+		if ($i==(scalar(@$map)-1)){
+		#	print "LAST LINE\n";
+			$flag=$split[0];
+			push (@array,@$map[$i]);
+			$$count=$$count+1;
+			my @tmp=@array;
+			$HoA{$flag}=\@tmp;
+		}
+		elsif($split[0] eq $flag){
+			#print "NORMAL \n";
+			$$count=$$count+1;
+			push (@array,@$map[$i]);
+		}
+		elsif($split[0] ne $flag){
+			#print "CHANGING LG from $flag to $split[0] \n";
+			
+			my @tmp=@array;
+			$HoA{$flag}=\@tmp;
 			@array=();
-			}
-		elsif($_!~/\S/){
-			#print "Whitespace\n";
-			next;
-			}
-		else{
-			#print $_;
-			push(@array,$_);
-			}		
+			$flag=$split[0];
+			$$count=$$count+1;
+			push (@$order,$flag);
+			push (@array,@$map[$i]);
+		}
 	}
-	return %HoA;
-}
-sub parse_group{
-	my($file)=@_;
-	my %HoA=();
-	my $key=();
+		return %HoA;
 	
+}
+sub sort_lg{
+	my ($file)=@_;
+	my %hash_to_sort=();
+
 	foreach(@$file){
-		my @array=split(" ",$_);
-		my @sub_array=();
-				for (my $i=1;$i<scalar(@array);$i++){
-					push (@sub_array,$array[$i]);
-					}
-				$HoA{$array[0]}=\@sub_array;
-			}
-	return %HoA;
+		#print $_."\n";
+		my @split=split(",",$_);
+		$hash_to_sort{$split[2]}=$_;
+	}
+	
+	my @aov=sort { $a <=> $b }(keys %hash_to_sort);
+	my @sorted_lg=();
+
+	foreach (@aov){
+		push(@sorted_lg, $hash_to_sort{$_});
+	}
+
+return @sorted_lg;
 }
