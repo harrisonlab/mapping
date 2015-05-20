@@ -31,6 +31,10 @@ The map_formatter.pl script takes a non-standard map file, such as those generat
 ./map_formatter.pl maptoformat.txt name_of_map_to_output.map
 ```
 
+The map_sorter.pl tool will take a disordered map and sort it into ascending cM order for each linkage group. This is necessary if the map_reader.pl tool has been used.
 
+```
+./map_sorter.pl map_to_sort.map
+```
 
 
