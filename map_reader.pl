@@ -34,18 +34,21 @@ my @comp_data= read_table(\$compare_map);
 #	 }
 #	 print "\n";
 #	}
+#exit;
 
 #THIS COMPARES THE MAPS LOOKING FOR MATCHING LOCI
 print "Comparing maps \n";
 	foreach(@comp_data){
-		my @marker=split('\t',$_);
-		#print "Searching for $marker[0] found on $marker[1] \n";
+		my @marker=split(',',$_);
+		#print "Searching for $marker[1] found on $marker[0] \n";
 		#print "$marker[1] \t";
 			foreach my $group (@group_data){
-				my @collapsed_markers= split(' ',$group);
+#				#print $group;
+				my @collapsed_markers= split(';',$group);
 					foreach my $collapsed (@collapsed_markers){
 						#print $collapsed;
-						if ($collapsed=~/$marker[0]/){
+						if ($collapsed=~/$marker[1]/){
+#						print "Marker match\n";
 							my $marker_lg=search_map(\@marker,\$collapsed_markers[0],\%hash_of_map);
 						}
 					}
@@ -72,8 +75,8 @@ my %map=%{$map};
 						#print "$lgs,$$locus,$split_loc[1],";
 						#print "$$marker[1],$$marker[0],$$marker[2]\n";
 						#print OUT1 "$lgs,$$locus,$split_loc[1]\n";
-						print OUT1 "$lgs,$$marker[0],$split_loc[1]\n";
-						print OUT2 "$$marker[1],$$marker[0],$$marker[2]";
+						print OUT1 "$lgs,$$marker[1],$split_loc[1]\n";
+						print OUT2 "$$marker[0],$$marker[1],$$marker[2]";
 					}
 				}
 		}

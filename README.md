@@ -18,7 +18,6 @@ perl -ne '/AX/ && print' merged.locus | wc -l
 ```
 
 Note that at present there is hard coded stuff in this script, which contains the header information required to produce a joinmap compatible file.
-
 The map_reader.pl script takes your map, a probe set mapping (needed for collapsed markers) and the map to compare with and outputs the comparison
 
 ```
@@ -41,8 +40,15 @@ The map_formatter.pl script takes a non-standard map file, such as those generat
 ##Run through with Emily x Fenella population
 
 
-cd ./em_fe
+Map reader compares the maps and outputs matching loci
 ```
+./map_reader.pl ./em_fe/combined_map.txt ./files/groups.txt ./hoxko/hxk_map.txt
+```
+
+Combine Emily and Fenella loc Files
+
+```
+cd ./em_fe
 for f in *.loc; do tail  -n +7 $f | head -n -183; done >../merged.locus
 perl -ne '/AX/ && print' merged.locus | wc -l
 
