@@ -97,7 +97,7 @@ Map reader compares the maps and outputs matching loci
 ./map_reader.pl ./rgxha/combined_map_filtered.map ./files/groups.txt ./hoxko/hxk_map.csv >./rgxha/pairwise_map.txt
 ```
 
-Sort the map by cM position
+Sort the map by cM position 
 ```
 ./map_sorter.pl ./rg_ha/rxh_processed.map  ./rg_ha/rxh_sorted.map 
 ```
