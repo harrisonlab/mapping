@@ -86,7 +86,7 @@ Format the map in joinmap format
 
 
 ###Map Reduction
-Reduce the map from joinmap to the groups that you want
+Reduce the map from joinmap to the groups that you want, in this case the combined map.
 ```
 ./map_reducer.pl ./rgxha/combined_map.txt ./rgxha/combined_map_groups.txt >./rgxha/combined_map_filtered.map
 ```
@@ -106,9 +106,9 @@ Sort the map by cM position
 
 Format the map in joinmap format
 ```
-./map_formatter.pl ./rg_ha/rxh_sorted.map ./rg_ha/rxh_joinmap
+./map_formatter.pl ./rg_ha/rxh_sorted.map ./rg_ha/rxh_joinmap.map
 ```
-Rename the map groups so that they are unified with HxK
+Rename the map groups so that they are unified with HxK, note you have to manually enter the number of linkage groups and the number of markers
 ```
  ./map_namer.pl ./rgxha/combined_map_filtered.map ./rgxha/map_compare.txt ./rgxha/rgxha_renamed.map 28 3933
 ```
