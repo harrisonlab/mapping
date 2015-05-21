@@ -48,7 +48,6 @@ Combine Emily and Fenella loc Files
 cd ./em_fe
 for f in *.loc; do tail  -n +7 $f | head -n -183; done >../merged.locus
 perl -ne '/AX/ && print' merged.locus | wc -l
-
 ```
 
 Format the loc file to remove 80 char issue
