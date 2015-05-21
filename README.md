@@ -3,6 +3,11 @@
 ##Tools
 
 
+This is a set of scripts for analysing maps and working with loc files:
+they are, map_formatter.pl, map_namer.pl, map_reader.pl, map_reducer.pl map_sorter.pl for maps.
+For loc files there is loc_formatter.pl and gap_inserter.pl
+
+
 The loc_formatter.pl script takes a loc file that is formatted to 80 char lines and converts it to single line data (i.e joinmap output data)
 
 ```
