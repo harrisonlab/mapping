@@ -73,20 +73,35 @@ Format the map in joinmap format
 ##Run through with Redgauntlet x Hapil population
 
 
-
-Reduce the map to the groups that you want
+###Map Reduction
+Reduce the map from joinmap to the groups that you want
 ```
 ./map_reducer.pl ./rgxha/combined_map.txt ./rgxha/combined_map_groups.txt >./rgxha/combined_map_filtered.map
 ```
 
-
+###Map Comparison
 Map reader compares the maps and outputs matching loci
 ```
 ./map_reader.pl ./rgxha/combined_map_filtered.map ./files/groups.txt ./hoxko/hxk_map.csv >./rgxha/pairwise_map.txt
 ```
 
-Combine Redgauntlet and Hapil loc Files
+Sort the map by cM position
+```
+./map_sorter.pl ./rg_ha/rxh_processed.map  ./rg_ha/rxh_sorted.map 
+```
 
+###Map formatting 
+Format the map in joinmap format
+```
+./map_formatter.pl ./rg_ha/rxh_sorted.map ./rg_ha/rxh_joinmap
+```
+Rename the map groups so that they are unified with HxK
+```
+ ./map_namer.pl ./rgxha/combined_map_filtered.map ./rgxha/map_compare.txt ./rgxha/rgxha_renamed.map 28 3933
+```
+
+### Loc file formatting
+Combine Redgauntlet and Hapil loc Files
 ```
 cd ./rg_ha
 for f in *.loc; do tail  -n +7 $f | head -n -142; done >../merged.locus
@@ -101,20 +116,5 @@ Format the loc file to remove 80 char issue
 Insert the gaps, based on the missing data
 ```
 ./gap_inserter.pl ./rgxha/formatted.loc ./rgxha/rgxha_numbers.txt ./rgxha/output.loc
-
 ```
 
-Sort the map by cM position
-```
-./map_sorter.pl ./rg_ha/rxh_processed.map  ./rg_ha/rxh_sorted.map 
-```
-
-Format the map in joinmap format
-```
-./map_formatter.pl ./rg_ha/rxh_sorted.map ./rg_ha/rxh_joinmap
-```
-
-Rename the map groups so that they are unified with HxK
-```
- ./map_namer.pl ./rgxha/combined_map_filtered.map ./rgxha/map_compare.txt ./rgxha/rgxha_renamed.map 28 3933
-```
