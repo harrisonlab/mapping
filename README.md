@@ -96,23 +96,22 @@ Reduce the map from joinmap to the groups that you want, in this case the combin
 ./map_reducer.pl ./rgxha/combined_map.txt ./rgxha/combined_map_groups.txt >./rgxha/combined_map_filtered.map
 ```
 
-###Map Comparison
+###Map Comparison and reformatting
 Map reader compares the maps and outputs matching loci
 ```
 ./map_reader.pl ./rgxha/combined_map_filtered.map ./files/groups.txt ./hoxko/hxk_map.csv >./rgxha/pairwise_map.txt
 ```
-
 Sort the map by cM position 
 ```
-./map_sorter.pl ./rg_ha/rxh_processed.map  ./rg_ha/rxh_sorted.map 
+./map_sorter.pl ./rg_ha/query_processed.map  ./rg_ha/rxh_sorted.map 
 ```
-
-###Map formatting 
-
 Format the map in joinmap format
 ```
 ./map_formatter.pl ./rg_ha/rxh_sorted.map ./rg_ha/rxh_joinmap.map
 ```
+
+###Map formatting
+
 Rename the map groups so that they are unified with HxK, note you have to manually enter the number of linkage groups and the number of markers
 ```
  ./map_namer.pl ./rgxha/combined_map_filtered.map ./rgxha/map_compare.txt ./rgxha/rgxha_renamed.map 28 3933
