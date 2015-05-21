@@ -35,10 +35,7 @@ The map_formatter.pl script takes a non-standard map file, such as those generat
 ```
 ./map_formatter.pl maptoformat.txt name_of_map_to_output.map
 ```
-```
-
 ##Run through with Emily x Fenella population
-
 
 Map reader compares the maps and outputs matching loci
 ```
