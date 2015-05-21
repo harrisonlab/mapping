@@ -50,7 +50,7 @@ sub parse_map{
 	print "ARRAY LENGTH ".scalar(@$map)." \n";
 	
 	for(my $i=0;$i<scalar(@$map);$i++){
-		@$map[$i]=~s/\n//g;
+		@$map[$i]=~s/\r\n//g;
 		my @split=split(',',@$map[$i]);
 		#print $split[0]."\n";
 		

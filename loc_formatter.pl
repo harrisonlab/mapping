@@ -39,7 +39,7 @@ my $num=scalar (keys %combined_marker);
        
        
        foreach my $val (keys %combined_marker){	
-			chomp $val;
+			#chomp $val;
 			print OUT $val."\r\n";
 		#	print $val."\n";
 			
@@ -64,6 +64,7 @@ for (my $i=$start;$i<scalar(@$multiplex_data);$i++){
 		if (@$multiplex_data[$i] =~/AX/ && $i==$start){
 				#print "HERE\n";
 				chomp @$multiplex_data[$i];
+				@$multiplex_data[$i]=~s/\r\n//g;
 				@$multiplex_data[$i]=~s/\r//g;
 				$name=@$multiplex_data[$i];	
 				
@@ -78,6 +79,7 @@ for (my $i=$start;$i<scalar(@$multiplex_data);$i++){
 		else{
 			#print "HERE\n";
 			chomp @$multiplex_data[$i];
+			@$multiplex_data[$i]=~s/\r\n//g;
 			@$multiplex_data[$i]=~s/\r//g;
 			$loc=$loc.@$multiplex_data[$i];
 			}

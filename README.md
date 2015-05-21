@@ -21,7 +21,7 @@ Note that at present there is hard coded stuff in this script, which contains th
 The map_reader.pl script takes your map, a probe set mapping (needed for collapsed markers) and the map to compare with and outputs the comparison
 
 ```
-./map_reader.pl combined_map.txt groups.txt hxk_map.txt
+./map_reader.pl combined_map.txt groups.txt hxk_map.csv
 ```
 
 The map_sorter.pl tool will take a disordered map and sort it into ascending cM order for each linkage group. This is necessary if the map_reader.pl tool has been used.
@@ -69,3 +69,41 @@ Format the map in joinmap format
 ```
 ./map_formatter.pl ./em_fe/exf_sorted.map ./em_fe/exf_joinmap
 ```
+
+##Run through with Redgauntlet x Hapil population
+
+Map reader compares the maps and outputs matching loci
+```
+./map_reader.pl ./rg_ha/combined_map.txt ./files/groups.txt ./hoxko/hxk_map.csv
+```
+
+Combine Redgauntlet and Hapil loc Files
+
+```
+cd ./rg_ha
+for f in *.loc; do tail  -n +7 $f | head -n -142; done >../merged.locus
+perl -ne '/AX/ && print' merged.locus | wc -l
+```
+
+Format the loc file to remove 80 char issue
+```
+./loc_formatter.pl ./rgxha/merged.locus ./rgxha/formatted.loc
+```
+
+Insert the gaps, based on the missing data
+```
+./gap_inserter.pl ./rgxha/formatted.loc ./rgxha/rgxha_numbers.txt ./rgxha/output.loc
+
+```
+
+Sort the map by cM position
+```
+./map_sorter.pl ./rg_ha/rxh_processed.map  ./rg_ha/rxh_sorted.map 
+```
+
+Format the map in joinmap format
+```
+./map_formatter.pl ./rg_ha/rxh_sorted.map ./rg_ha/rxh_joinmap
+```
+
+
