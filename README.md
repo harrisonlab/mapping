@@ -35,6 +35,16 @@ The map_formatter.pl script takes a non-standard map file, such as those generat
 ```
 ./map_formatter.pl maptoformat.txt name_of_map_to_output.map
 ```
+
+The map_reducer script will reduce the map from joinmap to the groups that you want
+```
+./map_reducer.pl original_map.txt desired_map_groups.txt >map_filtered.map
+```
+
+
+
+
+
 ##Run through with Emily x Fenella population
 
 Map reader compares the maps and outputs matching loci
@@ -70,6 +80,8 @@ Format the map in joinmap format
 ./map_formatter.pl ./em_fe/exf_sorted.map ./em_fe/exf_joinmap
 ```
 
+
+
 ##Run through with Redgauntlet x Hapil population
 
 
@@ -91,6 +103,7 @@ Sort the map by cM position
 ```
 
 ###Map formatting 
+
 Format the map in joinmap format
 ```
 ./map_formatter.pl ./rg_ha/rxh_sorted.map ./rg_ha/rxh_joinmap
@@ -101,6 +114,7 @@ Rename the map groups so that they are unified with HxK
 ```
 
 ### Loc file formatting
+
 Combine Redgauntlet and Hapil loc Files
 ```
 cd ./rg_ha
