@@ -115,6 +115,6 @@ Format the map in joinmap format
 ```
 
 Rename the map groups so that they are unified with HxK
-
+```
  ./map_namer.pl ./rgxha/combined_map_filtered.map ./rgxha/map_compare.txt ./rgxha/rgxha_renamed.map 28 3933
-
+```
